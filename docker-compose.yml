@@ -1,0 +1,20 @@
+---
+version: "3"
+
+services:
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+
+  edge-proxy:
+    build: envoy-edge-proxy
+    ports:
+      - 8080:8080
+      - 9000:9000
+
+  http-api:
+    build: java-spring-rest
+    environment:
+      ZIPKIN_URL: http://zipkin:9411/

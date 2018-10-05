@@ -1,0 +1,86 @@
+admin:
+  access_log_path: /tmp/admin_access.log
+  address:
+    socket_address: { address: 0.0.0.0, port_value: 9000 }
+
+node:
+  id: default-node
+  cluster: default-cluster
+  locality:
+    zone: default-zone
+
+tracing:
+  http:
+    name: envoy.zipkin
+    config:
+      collector_cluster: zipkin
+      collector_endpoint: /api/v1/spans
+
+static_resources:
+  listeners:
+  - name: listener_0
+    address:
+      socket_address: { address: 0.0.0.0, port_value: 8080 }
+    filter_chains:
+    - filters:
+      - name: envoy.http_connection_manager
+        config:
+          generate_request_id: true
+          tracing:
+            operation_name: egress
+            random_sampling:
+              value: 1
+          stat_prefix: ingress_http
+          codec_type: AUTO
+          access_log:
+            - name: envoy.file_access_log
+              config:
+                path: /dev/stdout
+                format: "[%START_TIME%] %REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL% %RESPONSE_CODE% %RESPONSE_FLAGS% %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% %REQ(X-FORWARDED-FOR)% %REQ(USER-AGENT)% %REQ(X-REQUEST-ID)% %REQ(:AUTHORITY)% downstream: %DOWNSTREAM_REMOTE_ADDRESS% %DOWNSTREAM_LOCAL_ADDRESS% upstream: %UPSTREAM_HOST% %UPSTREAM_CLUSTER% %UPSTREAM_LOCAL_ADDRESS%\n"
+          route_config:
+            name: api-gateway
+            virtual_hosts:
+            - name: api-gateway
+              domains: ["*"]
+              routes:
+              - match:
+                  path: /ping
+                direct_response:
+                  status: 200
+              - match:
+                  prefix: /api/
+                route:
+                  cluster: http-api
+          http_filters:
+          - name: envoy.router
+
+  clusters:
+
+  - name: zipkin
+    connect_timeout: 1s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: zipkin
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: zipkin
+                port_value: 9411
+
+  - name: http-api
+    connect_timeout: 0.25s
+    type: logical_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: http-api
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: http-api
+                port_value: 8080
+
