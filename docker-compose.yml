@@ -19,7 +19,7 @@ services:
       - 9000:9000
 
   http-api:
-    build: java-spring-rest
+    build: http-api-amqp-producer
     environment:
       ZIPKIN_URL: http://zipkin:9411/
       RABBIT_HOST: rabbitmq
