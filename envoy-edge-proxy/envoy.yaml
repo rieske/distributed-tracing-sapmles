@@ -5,7 +5,7 @@ admin:
 
 node:
   id: default-node
-  cluster: default-cluster
+  cluster: api-gateway
   locality:
     zone: default-zone
 

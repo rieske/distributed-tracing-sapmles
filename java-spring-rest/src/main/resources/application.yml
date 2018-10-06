@@ -3,3 +3,8 @@ spring:
   zipkin:
     baseUrl: ${ZIPKIN_URL}
     sender.type: web
+
+  rabbitmq:
+    template:
+      exchange: sample-exchange
+    host: ${RABBIT_HOST}
