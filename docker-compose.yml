@@ -29,6 +29,7 @@ services:
     environment:
       ZIPKIN_URL: http://zipkin:9411/
       RABBIT_HOST: rabbitmq
+      KAFKA_URL: kafka:9092
     networks:
      - default
      - kafka
