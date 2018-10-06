@@ -1,0 +1,53 @@
+buildscript {
+    ext {
+        springCloudVersion = 'Finchley.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+}
+
+
+mainClassName = 'lt.rieske.tracing.Main'
+
+sourceCompatibility = 11
+
+bootJar {
+    archiveName = 'rest.jar'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/libs-milestone' }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    compile 'org.projectlombok:lombok:1.18.2'
+
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-amqp'
+
+    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compile 'org.springframework.cloud:spring-cloud-starter-zipkin'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.10.2'
+}

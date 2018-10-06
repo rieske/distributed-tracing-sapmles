@@ -24,6 +24,15 @@ services:
       ZIPKIN_URL: http://zipkin:9411/
       RABBIT_HOST: rabbitmq
 
+  amqp-consumer-kafka-producer:
+    build: amqp-consumer-kafka-producer
+    environment:
+      ZIPKIN_URL: http://zipkin:9411/
+      RABBIT_HOST: rabbitmq
+    networks:
+     - default
+     - kafka
+
   rabbitmq:
     image: rabbitmq:3.7.8-management
     ports:

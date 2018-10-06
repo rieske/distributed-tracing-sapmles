@@ -1,0 +1,10 @@
+spring:
+  application.name: amqp-consumer-kafka-producer
+  zipkin:
+    baseUrl: ${ZIPKIN_URL}
+    sender.type: web
+
+  rabbitmq:
+    template:
+      exchange: sample-exchange
+    host: ${RABBIT_HOST}
