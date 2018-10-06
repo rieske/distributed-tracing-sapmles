@@ -1,6 +1,7 @@
 package lt.rieske.tracing.rest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,16 +29,20 @@ class Api {
             .and(route(POST("/api/v1/sample"), handler::postToRabbit));
     }
 
+    @Slf4j
     @RequiredArgsConstructor
     private static class ApiV1Handler {
 
         private final RabbitClient rabbitClient;
 
         Mono<ServerResponse> getSample(ServerRequest request) {
+            log.info("Received request {}", request);
+
             return ok().body(Mono.just("{\"foo\":\"bar\"}"), String.class);
         }
 
         Mono<ServerResponse> postToRabbit(ServerRequest request) {
+            log.info("Received request {}", request);
 
             rabbitClient.sendMessage("{}", "test");
 
