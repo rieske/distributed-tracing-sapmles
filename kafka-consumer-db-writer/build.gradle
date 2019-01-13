@@ -36,12 +36,16 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
     implementation 'org.springframework.kafka:spring-kafka'
 
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'mysql:mysql-connector-java:8.0.13'
+
     implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
     implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
+    implementation 'io.zipkin.brave:brave-instrumentation-mysql8:5.6.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

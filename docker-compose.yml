@@ -34,6 +34,26 @@ services:
      - default
      - kafka
 
+  kafka-consumer-db-writer:
+    build: kafka-consumer-db-writer
+    environment:
+      ZIPKIN_URL: http://zipkin:9411/
+      KAFKA_URL: kafka:9092
+      DB_URL: jdbc:mysql://db:3306/sample-db?useSSL=false&allowPublicKeyRetrieval=true&queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor
+      DB_USER: sample-user
+      DB_PASSWORD: sample-password
+    networks:
+     - default
+     - kafka
+
+  db:
+    image: mysql:8.0.13
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sample-db
+      MYSQL_USER: sample-user
+      MYSQL_PASSWORD: sample-password
+
   rabbitmq:
     image: rabbitmq:3.7.8-management
     ports:

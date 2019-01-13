@@ -1,0 +1,24 @@
+spring:
+  application.name: kafka-consumer-db-writer
+  main.allow-bean-definition-overriding: true
+  zipkin:
+    baseUrl: ${ZIPKIN_URL}
+    sender.type: web
+
+  kafka:
+    bootstrap-servers: ${KAFKA_URL}
+    topic: sample-topic
+    client-id: test-client
+    consumer:
+      auto-offset-reset: latest
+      group-id: test-group
+    listener:
+      concurrency: 4
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      initialization-fail-timeout: 60000

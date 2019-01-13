@@ -16,7 +16,7 @@ class MessageListener {
     @RabbitListener(queues = "sampleQueue")
     void processMessage(byte[] content) {
         var contentStr = new String(content);
-        log.info("Received message: {}", new String(contentStr));
+        log.info("Received message: {}", contentStr);
 
         kafkaTemplate.send("sample-topic", "some-key", contentStr);
     }
