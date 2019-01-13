@@ -1,17 +1,17 @@
 buildscript {
     ext {
-        springCloudVersion = 'Finchley.RELEASE'
+        lombokVersion = '1.18.4'
+        springCloudVersion = 'Finchley.SR2'
     }
     repositories {
         mavenCentral()
-        jcenter()
     }
 }
 
 plugins {
     id 'java'
     id 'application'
-    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'org.springframework.boot' version '2.1.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.6.RELEASE'
 }
 
@@ -20,13 +20,8 @@ mainClassName = 'lt.rieske.tracing.Main'
 
 sourceCompatibility = 11
 
-bootJar {
-    archiveName = 'rest.jar'
-}
-
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/libs-milestone' }
 }
 
 dependencyManagement {
@@ -36,20 +31,16 @@ dependencyManagement {
 }
 
 dependencies {
-    compile 'org.projectlombok:lombok:1.18.2'
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
-    compile 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.kafka:spring-kafka'
 
-    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    compile 'org.springframework.cloud:spring-cloud-starter-zipkin'
+    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
 
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
-}
-
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.10.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
